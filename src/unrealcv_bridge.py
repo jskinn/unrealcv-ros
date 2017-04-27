@@ -6,7 +6,7 @@ import cv_bridge
 import cv2 as opencv
 import unrealcv
 import unreal_coordinates as ue_coords
-import unrealcv_ros.srv
+import unrealcv_ros.srv as services
 
 
 # Following tutorial here: http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29
@@ -36,7 +36,7 @@ class UnrealCVBridge(object):
 
     def create_services(self):
         print("Starting services...")
-        self._get_camera_view_service = rospy.Service('get_camera_view', unrealcv_ros.srv.GetCameraView,
+        self._get_camera_view_service = rospy.Service('get_camera_view', services.GetCameraView,
                                                       self.handle_get_camera_view)
 
     # Helpers and locking

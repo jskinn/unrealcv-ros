@@ -28,7 +28,7 @@ def main():
     location = (100, -270, 100)
     rotation = (1, 0, 0, 0)
 
-    get_camera_view_service = rospy.ServiceProxy('get_camera_view', services.GetCameraView)
+    get_camera_view_service = rospy.ServiceProxy('get_camera_view', services.GetImageForPose)
 
     pose = create_pose(location, rotation)
     response = get_camera_view_service(pose)

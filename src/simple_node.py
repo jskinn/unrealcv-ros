@@ -10,8 +10,7 @@ import unreal_coordinates as ue_coords
 import unrealcv_ros.srv as services
 
 
-# Following tutorial here: http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29
-class UnrealCVBridge(object):
+class SimpleUnrealCVServer(object):
 
     def __init__(self, config):
         host = unrealcv.HOST
@@ -37,7 +36,7 @@ class UnrealCVBridge(object):
 
     def create_services(self):
         print("Starting services...")
-        self._get_camera_view_service = rospy.Service('get_camera_view', services.GetCameraView,
+        self._get_camera_view_service = rospy.Service('get_camera_view', services.GetImageForPose,
                                                       self.handle_get_camera_view)
 
     # Helpers and locking
@@ -68,8 +67,8 @@ class UnrealCVBridge(object):
 
 
 def main():
-    rospy.init_node('unrealcv_ros')
-    unrealcv_bridge = UnrealCVBridge(config={})  # TODO: Get config from somewhere
+    rospy.init_node('unrealcv_simulator')
+    unrealcv_bridge = SimpleUnrealCVServer(config={})  # TODO: Get config from somewhere
     unrealcv_bridge.create_services()
 
     print("Ready!")

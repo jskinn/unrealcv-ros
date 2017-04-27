@@ -2,6 +2,7 @@
 from __future__ import print_function
 import os
 import threading
+import numpy as np
 import rospy
 import std_msgs.msg
 import geometry_msgs.msg
@@ -87,6 +88,9 @@ class UnrealCVPassthrough(object):
     This is based on the source code, at time of writing, the documentation above is incomplete.
     """
 
+    # These are the valid view modes for the cameras.
+    view_modes = ['lit', 'depth', 'normal', 'object_mask', 'wireframe']
+
     def __init__(self, config):
         host = unrealcv.HOST
         port = unrealcv.PORT
@@ -167,10 +171,17 @@ class UnrealCVPassthrough(object):
         filename = None
         if hasattr(request, 'filename'):
             filename = request.filename
-        unrealcv_message = make_vget_camera_image(request.camera_id, request.view_mode, filename)
+        view_mode = 'lit'
+        if hasattr(request, 'view_mode') and request.view_mode in self.view_modes:
+            view_mode = request.view_mode
+
+        unrealcv_message = make_vget_camera_image(request.camera_id, view_mode, filename)
         image_filename = self.request_client(unrealcv_message)
-        image_mat = opencv.imread(image_filename)
-        os.remove(image_filename)
+        if os.path.isfile(image_filename):
+            image_mat = opencv.imread(image_filename)
+            os.remove(image_filename)
+        else:
+            image_mat = np.matrix([[]])
         return self.opencv_bridge.cv2_to_imgmsg(image_mat, encoding='passthrough')
 
     def handle_get_camera_location(self, request):
@@ -203,7 +214,10 @@ class UnrealCVPassthrough(object):
         return self.request_client(message)
 
     def handle_set_viewmode(self, request):
-        return self.request_client(make_vset_viewmode(request.view_mode))
+        view_mode = 'lit'
+        if hasattr(request, 'view_mode') and request.view_mode in self.view_modes:
+            view_mode = request.view_mode
+        return self.request_client(make_vset_viewmode(view_mode))
 
     def handle_get_object_color(self, request):
         color = self.request_client(make_vget_object_color(request.object_name))

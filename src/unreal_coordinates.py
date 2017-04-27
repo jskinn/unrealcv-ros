@@ -83,14 +83,15 @@ def transform_to_unreal(location, rotation):
     # Invert rotation for left-handed switch
     rotation = (np.array((1, -1, -1, -1)) * rotation) / np.dot(rotation, rotation)
 
-    return (location, unreal_quat2euler(rotation[0], rotation[1], rotation[2], rotation[3]))
+    return location, unreal_quat2euler(rotation[0], rotation[1], rotation[2], rotation[3])
 
 
 def transform_from_unreal(location, rotation):
     """
     Swap the coordinate frames from unreal coordinates
     to my standard convention
-    :param pose: A point, as any 3-indexable, or a UnrealTransform object
+    :param location: A point, as any 3-indexable
+    :param rotation: A rotation, as roll, pitch, yaw, in that order
     :return: A point or Transform object, depending on the parameter
     """
     if location is not None and len(location) >= 3:

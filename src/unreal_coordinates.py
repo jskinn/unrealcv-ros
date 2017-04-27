@@ -38,23 +38,19 @@ def unreal_quat2euler(w, x, y, z):
     return roll, pitch, yaw
 
 
-def transform_to_unreal(pose):
+def transform_to_unreal(location, rotation):
     """
     Swap the coordinate frames from the ROS standard coordinate frame to the one used by unreal
-    :param pose: A point, as any 3-length indexable, 
+    :param location: A point, as any 3-length indexable, 
+    :param rotation: An orientation as a quaternion, w first
     :return: A tuple containing location and rotation (in euler angles)
     """
-    if hasattr(pose, 'position'):
-        location = pose.position
-    elif len(pose) >= 3:
-        location = (pose[0], pose[1], pose[2])
+    if len(location) >= 3:
+        location = (location[0], location[1], location[2])
     else:
         location = (0, 0, 0)
-
-    if hasattr(pose, 'orientation'):
-        rotation = pose.orientation
-    elif hasattr(pose, 'rotation'):
-        rotation = pose.rotation
+    if len(rotation) >= 4:
+        rotation = (rotation[0], rotation[1], rotation[2], rotation[3])
     else:
         rotation = (1, 0, 0, 0)
 

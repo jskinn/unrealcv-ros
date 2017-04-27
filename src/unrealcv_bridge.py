@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
+import os
 import threading
 import rospy
 import cv_bridge
@@ -52,10 +53,17 @@ class UnrealCVBridge(object):
 
     # Service Handlers
     def handle_get_camera_view(self, request):
-        location, rotation = ue_coords.transform_to_unreal(request.pose)
+        # Parse the request arguments
+        location = request.pose.position
+        location = (location.x, location.y, location.z)
+        rotation = request.pose.orientation
+        rotation = (rotation.w, rotation.x, rotation.y, rotation.z)
+
+        location, rotation = ue_coords.transform_to_unreal(location, rotation)
         camera_id = 0   # TODO: Handle multiple camera IDs
         image_filename = self.get_camera_image(camera_id, location, rotation)
         image_mat = opencv.imread(image_filename)
+        os.remove(image_filename)
         return self.opencv_bridge.cv2_to_imgmsg(image_mat, encoding='passthrough')
 
 
@@ -63,6 +71,8 @@ def main():
     rospy.init_node('unrealcv_ros')
     unrealcv_bridge = UnrealCVBridge(config={})  # TODO: Get config from somewhere
     unrealcv_bridge.create_services()
+
+    print("Ready!")
     try:
         rospy.spin()
     except KeyboardInterrupt:

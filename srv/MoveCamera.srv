@@ -1,0 +1,4 @@
+uint32 camera_id
+geometry_msgs/Point location
+---
+string status

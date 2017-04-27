@@ -1,0 +1,5 @@
+uint32 camera_id
+string view_mode
+string filename
+---
+sensor_msgs/Image image

@@ -59,8 +59,23 @@ find_package(catkin REQUIRED COMPONENTS
 # Generate services in the 'srv' folder
 add_service_files(
   FILES
-  GetCameraView.srv
-  SetCameraPose.srv
+  GetCameraImage.srv
+  GetCameraImageWithFilename.srv
+  GetCameraLocation.srv
+  GetCameraRotation.srv
+  GetImageForPose.srv
+  GetViewmode.srv
+  MoveCamera.srv
+  SetCameraLocation.srv
+  SetCameraRotation.srv
+  SetViewmode.srv
+
+  GetObjectColor.srv
+  SetObjectColor.srv
+  GetObjectLocation.srv
+  GetObjectRotation.srv
+  SetObjectLocation.srv
+  SetObjectRotation.srv
 )
 
 ## Generate actions in the 'action' folder

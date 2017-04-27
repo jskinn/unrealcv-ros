@@ -1,0 +1,4 @@
+uint32 camera_id
+geometry_msgs/Quaternion rotation
+---
+string status
